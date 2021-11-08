@@ -41,6 +41,11 @@ impl IpNetwork {
         32 - self.num_network_bits()
     }
 
+    /// Gets the number of individual hosts that reside within this network.
+    pub fn num_hosts(&self) -> u64 {
+        2_u64.pow(self.num_host_bits().into())
+    }
+
     /// The supernet of some IP network is one bit less-specific than its subnets. This means that
     /// the address space is one bit more ambiguous, and offers a power of two more addresses
     /// within the network set.
@@ -193,6 +198,34 @@ mod tests {
         assert_eq!(
             IpAddress::from([255, 255, 255, 255]),
             IpNetwork::new(IpAddress::from(0), 32).unwrap().get_mask()
+        );
+    }
+
+    #[test]
+    fn num_hosts() {
+        assert_eq!(
+            1,
+            IpNetwork::new(IpAddress::from(0), 32).unwrap().num_hosts()
+        );
+        assert_eq!(
+            2,
+            IpNetwork::new(IpAddress::from(0), 31).unwrap().num_hosts()
+        );
+        assert_eq!(
+            4096,
+            IpNetwork::new(IpAddress::from(0), 20).unwrap().num_hosts()
+        );
+        assert_eq!(
+            4194304,
+            IpNetwork::new(IpAddress::from(0), 10).unwrap().num_hosts()
+        );
+        assert_eq!(
+            2147483648,
+            IpNetwork::new(IpAddress::from(0), 1).unwrap().num_hosts()
+        );
+        assert_eq!(
+            4294967296,
+            IpNetwork::new(IpAddress::from(0), 0).unwrap().num_hosts()
         );
     }
 }
