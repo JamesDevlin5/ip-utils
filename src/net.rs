@@ -64,6 +64,15 @@ impl IpNetwork {
             None
         }
     }
+
+    /// Creates the mask associated with this network, in IP Address form.
+    pub fn get_mask(&self) -> IpAddress {
+        match self.num_network_bits() {
+            // Overflow check
+            32 => IpAddress::from(u32::MAX),
+            n => IpAddress::from(!(u32::MAX >> n)),
+        }
+    }
 }
 
 impl fmt::Display for IpNetwork {
@@ -140,6 +149,50 @@ mod tests {
                 .supernet()
                 .unwrap(),
             IpNetwork::new(IpAddress::from(u32::MAX - 3), 31).unwrap()
+        );
+    }
+
+    #[test]
+    fn mask_gen() {
+        assert_eq!(
+            IpAddress::from(0),
+            IpNetwork::new(IpAddress::from(u32::MAX), 0)
+                .unwrap()
+                .get_mask()
+        );
+        assert_eq!(
+            IpAddress::from(0),
+            IpNetwork::new(IpAddress::from(21010), 0)
+                .unwrap()
+                .get_mask()
+        );
+        assert_eq!(
+            IpAddress::from([255, 255, 0, 0]),
+            IpNetwork::new(IpAddress::from(0), 16).unwrap().get_mask()
+        );
+        assert_eq!(
+            IpAddress::from([255, 255, 248, 0]),
+            IpNetwork::new(IpAddress::from(0), 21).unwrap().get_mask()
+        );
+        assert_eq!(
+            IpAddress::from([255, 255, 252, 0]),
+            IpNetwork::new(IpAddress::from(0), 22).unwrap().get_mask()
+        );
+        assert_eq!(
+            IpAddress::from([255, 255, 254, 0]),
+            IpNetwork::new(IpAddress::from(0), 23).unwrap().get_mask()
+        );
+        assert_eq!(
+            IpAddress::from([255, 255, 255, 0]),
+            IpNetwork::new(IpAddress::from(0), 24).unwrap().get_mask()
+        );
+        assert_eq!(
+            IpAddress::from([255, 255, 255, 128]),
+            IpNetwork::new(IpAddress::from(0), 25).unwrap().get_mask()
+        );
+        assert_eq!(
+            IpAddress::from([255, 255, 255, 255]),
+            IpNetwork::new(IpAddress::from(0), 32).unwrap().get_mask()
         );
     }
 }
