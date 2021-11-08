@@ -1,4 +1,5 @@
 mod addr;
+mod net;
 
 #[cfg(test)]
 mod tests {

@@ -58,9 +58,15 @@ mod tests {
         assert_eq!(IpAddress::from(0), IpAddress::from([0, 0, 0, 0]));
         assert_eq!(IpAddress::from(10), IpAddress::from([0, 0, 0, 10]));
         assert_eq!(IpAddress::from(16843009), IpAddress::from([1, 1, 1, 1]));
-        assert_eq!(IpAddress::from(684196753), IpAddress::from([40, 200, 3, 145]));
+        assert_eq!(
+            IpAddress::from(684196753),
+            IpAddress::from([40, 200, 3, 145])
+        );
         assert_eq!(IpAddress::from(65535), IpAddress::from([0, 0, 255, 255]));
-        assert_eq!(IpAddress::from(u32::MAX), IpAddress::from([255, 255, 255, 255]));
+        assert_eq!(
+            IpAddress::from(u32::MAX),
+            IpAddress::from([255, 255, 255, 255])
+        );
     }
 
     #[test]
