@@ -1,3 +1,5 @@
+mod addr;
+
 #[cfg(test)]
 mod tests {
     #[test]
