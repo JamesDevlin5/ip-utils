@@ -43,7 +43,7 @@ impl IpNetwork {
 
     /// Gets the number of individual hosts that reside within this network.
     pub fn num_hosts(&self) -> u64 {
-        2_u64.pow(self.num_host_bits().into())
+        1 << self.num_host_bits()
     }
 
     /// The supernet of some IP network is one bit less-specific than its subnets. This means that
